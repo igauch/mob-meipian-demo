@@ -33,26 +33,31 @@
               <div class="swiper-pagination" slot="pagination"></div>
             </swiper>
           </div>
-          <div class="item" v-for="item in list" v-cloak>
-            <a target="_blank" :href=" 'https://' + item.domain + '/' + item.article_id">
-              <div class="bg img" :style="{ backgroundImage: 'url(' + item.cover_img_url + ')' }"></div>
-            </a>
-            <div class="summary">
-              <a class="title" target="_blank" :href=" 'https://' + item.domain + '/' + item.article_id">
-                {{item.title }}</a>
+
+          <div class="main">
+            <div class="item" v-for="item in list" v-cloak>
               <p class="info">
                 <a class="author" target="_blank" :href="'https://www.meipian.cn/c/' + item.author_id ">
-                  <img :src="item.author_head" class="bg"><em class="oneline">{{ item.author }}</em></a>
-                <em class="viewer icon oneline">{{ item.visit_count }}</em>
-                <em class="agree icon oneline">{{ item.praise_count }}</em>
-                <em class="talk icon oneline">{{ item.comment_count }}</em>
+                  <img :src="item.author_head" class="bg">
+                  <em class="oneline">{{ item.author }}</em>
+                </a>
               </p>
+              <div class="summary">
+                <a class="title" target="_blank" :href=" 'https://' + item.domain + '/' + item.article_id">
+                  {{item.title }}
+                </a>
+              </div>
+              <a class="img-main" target="_blank" :href=" 'https://' + item.domain + '/' + item.article_id">
+                <div class="bg img" :style="{ backgroundImage: 'url(' + item.cover_img_url + ')' }"></div>
+              </a>
+              <comment :item="item"/>
             </div>
           </div>
+
           <!--<div id="wait" v-show="!loading && finish">-->
-            <!--<div class="loading-warp">-->
-              <!--<div class="loading"></div>-->
-            <!--</div>-->
+          <!--<div class="loading-warp">-->
+          <!--<div class="loading"></div>-->
+          <!--</div>-->
           <!--</div>-->
         </swiper-slide>
         <swiper-slide>关注</swiper-slide>
@@ -63,7 +68,8 @@
 </template>
 
 <script>
-  import axios from 'axios'
+  import axios from 'axios';
+  import comment from './comment';
 
   let navSwiperConstructor = '';
   let pageSwiperConstructor = '';
@@ -78,9 +84,9 @@
   };
   const navSwitchTransition = function () {
     const $navBar = document.getElementById('nav-bar');
-    navSwiperConstructor.slides[pageSwiperConstructor.previousIndex].style.color='#333';
-    navSwiperConstructor.slides[pageSwiperConstructor.activeIndex].style.color='#2887f0';
-    $navBar.style.left = pageSwiperConstructor.activeIndex*33.3333+'%';
+    navSwiperConstructor.slides[pageSwiperConstructor.previousIndex].style.color = '#333';
+    navSwiperConstructor.slides[pageSwiperConstructor.activeIndex].style.color = '#2887f0';
+    $navBar.style.left = pageSwiperConstructor.activeIndex * 33.3333 + '%';
   };
   const pageSwiperSlideChangeCallback = function () {
     navSwiperConstructor.slideTo(this.activeIndex);
@@ -89,6 +95,9 @@
 
   export default {
     name: 'HelloWorld',
+    components:{
+      comment
+    },
     data() {
       return {
         navSwiperOptions: {
@@ -109,7 +118,7 @@
         carouselOptions: {
           pagination: {
             el: '.swiper-pagination',
-            clickable:true,
+            clickable: true,
           },
           loop: true,
           autoplay: {
@@ -117,22 +126,22 @@
             disableOnInteraction: false
           }
         },
-        list:[]
+        list: []
       }
     },
-    methods:{
-      getArticleList(){
-        axios.post('/php/default/article.php',{
+    methods: {
+      getArticleList() {
+        axios.post('/php/default/article.php', {
           category_id: "10",
           max_id: "248768",
           controller: "category",
           action: "list"
-        }).then(res=>{
-          this.list=this.list.concat(res.data.articles);
+        }).then(res => {
+          this.list = this.list.concat(res.data.articles);
         })
       }
     },
-    created(){
+    created() {
       this.getArticleList();
     }
   }
@@ -141,8 +150,9 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
   $primary: #2887f0;
-  .nav-swiper{
-    &:after{
+  .nav-swiper {
+    font-size: 1.15rem;
+    &:after {
       content: '';
       height: 1px;
       width: 100%;
@@ -152,31 +162,31 @@
       display: block;
     }
     margin-bottom: 2px;
-    .swiper-container{
+    .swiper-container {
       margin: 0 auto;
       line-height: 2;
       max-width: 280px;
       overflow: visible;
     }
-    .swiper-wrapper{
+    .swiper-wrapper {
       position: relative;
     }
-    .swiper-slide{
+    .swiper-slide {
       text-align: center;
       color: #333;
       transition: all 300ms;
-      &:nth-child(1){
+      &:nth-child(1) {
         color: $primary;
       }
     }
-    .bar{
+    .bar {
       position: absolute;
       bottom: -1px;
       line-height: 0;
       width: 33.3333%;
       left: 0;
       transition: all 300ms;
-      .bar-line{
+      .bar-line {
         margin: 0 auto;
         height: 2px;
         width: 2.5rem;
@@ -184,12 +194,59 @@
       }
     }
   }
-  .carousel-swiper{
-    .carousel-swiper-img{
+
+  .carousel-swiper {
+    .carousel-swiper-img {
       width: 100%;
     }
-    .swiper-pagination-bullet-active{
+    .swiper-pagination-bullet-active {
       background: #dfdfdc;
+    }
+  }
+
+  .main {
+    background-color: #f3f3f3;
+  }
+
+  .item {
+    width: 100%;
+    margin-bottom: 6px;
+    background-color: #fff;
+    .img-main .img {
+      width: 100%;
+      height: 260px;
+    }
+    .info, .summary, .comment {
+      margin: 0 16px;
+      padding: 10px 0;
+    }
+    .info {
+      line-height: 0;
+      .author {
+        color: #555;
+      }
+      img {
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        margin-right: 6px;
+      }
+      em {
+        line-height: 2rem;
+        position: absolute;
+      }
+    }
+    .summary {
+      padding-top: 0;
+      .title {
+        color: #333;
+        font-size: 1.15rem;
+      }
+    }
+    .bg {
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: 50%;
     }
   }
 </style>
