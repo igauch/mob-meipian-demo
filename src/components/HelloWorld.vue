@@ -54,11 +54,11 @@
             </div>
           </div>
 
-          <!--<div id="wait" v-show="!loading && finish">-->
-          <!--<div class="loading-warp">-->
-          <!--<div class="loading"></div>-->
-          <!--</div>-->
-          <!--</div>-->
+          <div id="wait" v-show="loading">
+            <div class="loading-warp">
+              <div class="loading"></div>
+            </div>
+          </div>
         </swiper-slide>
         <swiper-slide>关注</swiper-slide>
         <swiper-slide>身边</swiper-slide>
@@ -69,6 +69,7 @@
 
 <script>
   import axios from 'axios';
+  import _ from 'lodash';
   import comment from './comment';
 
   let navSwiperConstructor = '';
@@ -95,7 +96,7 @@
 
   export default {
     name: 'HelloWorld',
-    components:{
+    components: {
       comment
     },
     data() {
@@ -110,6 +111,7 @@
         pageSwiperOptions: {
           watchSlidesProgress: true,
           resistanceRatio: 0,
+          autoHeight: true,
           on: {
             init: pageSwiperInitCallback,
             slideChange: pageSwiperSlideChangeCallback
@@ -126,23 +128,31 @@
             disableOnInteraction: false
           }
         },
-        list: []
+        list: [],
+        loading: true
       }
     },
     methods: {
-      getArticleList() {
+      getArticleList(max_id = "248768") {
+        this.loading = true;
         axios.post('/php/default/article.php', {
           category_id: "10",
-          max_id: "248768",
+          max_id: max_id,
           controller: "category",
           action: "list"
         }).then(res => {
           this.list = this.list.concat(res.data.articles);
+          this.loading = false;
         })
       }
     },
     created() {
       this.getArticleList();
+      window.addEventListener('scroll', _.throttle(() => {
+        if (window.pageYOffset>200 && ( window.pageYOffset + window.innerHeight > document.documentElement.scrollHeight - 100) ) {
+          this.getArticleList(this.list[this.list.length - 1].id);
+        }
+      }, 200));
     }
   }
 </script>
@@ -157,6 +167,7 @@
     width: 100%;
     z-index: 9999;
     background-color: #fff;
+    user-select: none;
     &:after {
       content: '';
       height: 1px;
@@ -199,7 +210,7 @@
     }
   }
 
-  #page{
+  #page {
     margin-top: 39px;
   }
 
@@ -255,6 +266,74 @@
       background-repeat: no-repeat;
       background-size: cover;
       background-position: 50%;
+    }
+  }
+
+  #wait {
+    margin: 50px 0 10px;
+    .loading-warp {
+      width: 30px;
+      height: 30px;
+      box-sizing: border-box;
+      position: relative;
+      margin: 20px auto 10px;
+    }
+    @keyframes loading-animate-before {
+      0% {
+        -webkit-transform: translate(-5px, -5px);
+        transform: translate(-5px, -5px)
+      }
+      50% {
+        -webkit-transform: translate(0);
+        transform: translate(0)
+      }
+      to {
+        -webkit-transform: translate(-5px, -5px);
+        transform: translate(-5px, -5px)
+      }
+    }
+    @keyframes loading-animate-after {
+      0% {
+        -webkit-transform: translate(5px, 5px);
+        transform: translate(5px, 5px)
+      }
+      50% {
+        -webkit-transform: translate(0);
+        transform: translate(0)
+      }
+      to {
+        -webkit-transform: translate(5px, 5px);
+        transform: translate(5px, 5px)
+      }
+    }
+    .loading {
+      animation: loading-animate 1s linear infinite;
+      &:before {
+        border-radius: 50%;
+        content: "";
+        width: 15px;
+        height: 15px;
+        display: block;
+        box-sizing: border-box;
+        background-color: $primary;
+        position: absolute;
+        top: 0;
+        left: 0;
+        animation: loading-animate-before 1s ease-in-out infinite;
+      }
+      &:after {
+        bottom: 0;
+        right: 0;
+        animation: loading-animate-after 1s ease-in-out infinite;
+        border-radius: 50%;
+        content: "";
+        width: 15px;
+        height: 15px;
+        display: block;
+        box-sizing: border-box;
+        background-color: $primary;
+        position: absolute;
+      }
     }
   }
 </style>
