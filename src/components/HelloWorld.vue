@@ -60,8 +60,14 @@
             </div>
           </div>
         </swiper-slide>
-        <swiper-slide>对编程我总是谦卑的，对工作我总是务实的</swiper-slide>
-        <swiper-slide>策略或技巧的失误（确切来说我是耿直着去的😂）希望能不影响你对我的看法</swiper-slide>
+        <swiper-slide>对编程我总是谦卑的，对工作我总是务实的
+          <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>谢谢
+          <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>Thank you very much!
+        </swiper-slide>
+        <swiper-slide>策略或技巧的失误（确切来说我是耿直着去的😂）希望能不影响你对我的看法
+          <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>谢谢
+          <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>Thank you very much!
+        </swiper-slide>
       </swiper>
     </div>
   </div>
@@ -212,7 +218,6 @@
 
   #page {
     margin-top: 39px;
-    min-height: 99%;
   }
 
   .carousel-swiper {
