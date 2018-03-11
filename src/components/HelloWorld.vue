@@ -152,6 +152,11 @@
   $primary: #2887f0;
   .nav-swiper {
     font-size: 1.15rem;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 9999;
+    background-color: #fff;
     &:after {
       content: '';
       height: 1px;
@@ -161,7 +166,6 @@
       background-color: #dedede;
       display: block;
     }
-    margin-bottom: 2px;
     .swiper-container {
       margin: 0 auto;
       line-height: 2;
@@ -193,6 +197,10 @@
         background-color: $primary;
       }
     }
+  }
+
+  #page{
+    margin-top: 39px;
   }
 
   .carousel-swiper {
