@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <HelloWorld/>
+    <HelloWorld class="hello-world"/>
   </div>
 </template>
 
@@ -16,6 +16,9 @@
 </script>
 
 <style lang="scss">
+  html,body,#app,.hello-world{
+    height: 100%;
+  }
   #app {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
