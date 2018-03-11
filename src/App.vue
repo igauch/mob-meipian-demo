@@ -25,6 +25,7 @@
   * {
     padding: 0;
     margin: 0;
+    outline: none;
   }
   a{
     text-decoration: none;
